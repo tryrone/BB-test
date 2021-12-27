@@ -10,7 +10,8 @@ import { ReactComponent as PlayBtn } from "../../assets/svgs/playBtn.svg";
 import { ReactComponent as Facebook } from "../../assets/svgs/facebook.svg";
 import { ReactComponent as Instagram } from "../../assets/svgs/insta.svg";
 import moment from 'moment';
-// import { Translator, Translate } from "react-auto-translate";
+import "moment/locale/es";
+import { Translator, Translate } from "react-auto-translate";
 
 const FullWidthContainer = styled.div`
   padding: 0px 16px;
@@ -180,6 +181,11 @@ const PageContent = () => {
   
 
     return (
+      <Translator
+        from="en"
+        to="es"
+        googleApiKey="AIzaSyDyRiTH0cYc18K5GOiLz7ZVkZjPpoO-DRk"
+      >
         <FullWidthContainer>
           <RowContainer>
             <LanguageButton
@@ -196,110 +202,146 @@ const PageContent = () => {
             </LanguageButton>
           </RowContainer>
 
-          {
-          missionGroupArrays.map((feed: GroupedMissions, index: number) => {
+          {missionGroupArrays.map((feed: GroupedMissions, index: number) => {
+            moment.locale(activeLanguage === languageEnum.english ? 'en' : "es");
             return (
-              <Fragment key={index + 'groupItem'}>
-                <p className="date_text">{moment(feed.date).format('D MMMM YYYY')}</p>
-                {
-                  feed.missions.map((mission:any,indexNumber:number)=>{
-                      if (indexNumber === missionGroupArrays[missionGroupArrays.length - 1].missions.length - 1) {
-                        const params = {
-                          4: mission?.title,
-                          5: mission?.image?.src || mission?.image?.src2x || mission?.video?.src,
-                          6: mission?.title,
-                          7: mission?.image?.scr || mission?.image?.src2x  || mission?.video?.src,
-                        };
-                          updateMetaTagContent(params);
-                        return (
-                          <Card key={indexNumber+'lastFeedItem'} ref={lastMissoionElementRef}>
-                            <RelativeContainer>
-                              <CashTypeContainer>
-                                <p className="cash_text">Cash</p>
-                                <Dot />
-                                {mission.__typename === missionType.facebook ? (
-                                  <Facebook />
-                                ) : (
-                                  <Instagram />
-                                )}
-                              </CashTypeContainer>
-                              {mission?.image ? (
-                                <ImageContainer
-                                  src={mission?.image?.src}
-                                  alt={mission?.image?.alt}
-                                />
+              <Fragment key={index + "groupItem"}>
+                <p className="date_text">
+                  {moment(feed.date).format("D MMMM YYYY")}
+                </p>
+                {feed.missions.map((mission: any, indexNumber: number) => {
+                  if (
+                    indexNumber ===
+                    missionGroupArrays[missionGroupArrays.length - 1].missions
+                      .length -
+                      1
+                  ) {
+                    const params = {
+                      4: mission?.title,
+                      5:
+                        mission?.image?.src ||
+                        mission?.image?.src2x ||
+                        mission?.video?.src,
+                      6: mission?.title,
+                      7:
+                        mission?.image?.scr ||
+                        mission?.image?.src2x ||
+                        mission?.video?.src,
+                    };
+                    updateMetaTagContent(params);
+                    return (
+                      <Card
+                        key={indexNumber + "lastFeedItem"}
+                        ref={lastMissoionElementRef}
+                      >
+                        <RelativeContainer>
+                          <CashTypeContainer>
+                            <p className="cash_text">
+                              {activeLanguage === languageEnum.english ? (
+                                "Cash"
                               ) : (
-                                <>
-                                  <VideoContainer>
-                                    <source
-                                      src={mission?.video?.src}
-                                      type="video/mp4"
-                                    />
-                                  </VideoContainer>
-                                  <PlayButton />
-                                </>
+                                <Translate>Cash</Translate>
                               )}
-                            </RelativeContainer>
-                            <p className="card_title">{mission?.title}</p>
-                            <RewardButton>
-                              <GiftIcon />
-                              <p className="bold_reward_text">Reward</p>
-                              <p className="amount_text">
-                                $ {mission?.cashReward}
-                              </p>
-                            </RewardButton>
-                          </Card>
-                        );
-                      } else {
-                        return (
-                          <Card key={indexNumber + 'nonLastFeedItems'}>
-                            <RelativeContainer>
-                              <CashTypeContainer>
-                                <p className="cash_text">Cash</p>
-                                <Dot />
-                                {mission.__typename === missionType.facebook ? (
-                                  <Facebook />
-                                ) : (
-                                  <Instagram />
-                                )}
-                              </CashTypeContainer>
-                              {mission?.image ? (
-                                <ImageContainer
-                                  src={mission?.image?.src}
-                                  alt={mission?.image?.alt}
+                            </p>
+                            <Dot />
+                            {mission.__typename === missionType.facebook ? (
+                              <Facebook />
+                            ) : (
+                              <Instagram />
+                            )}
+                          </CashTypeContainer>
+                          {mission?.image ? (
+                            <ImageContainer
+                              src={mission?.image?.src}
+                              alt={mission?.image?.alt}
+                            />
+                          ) : (
+                            <>
+                              <VideoContainer>
+                                <source
+                                  src={mission?.video?.src}
+                                  type="video/mp4"
                                 />
+                              </VideoContainer>
+                              <PlayButton />
+                            </>
+                          )}
+                        </RelativeContainer>
+                        <p className="card_title">{mission?.title}</p>
+                        <RewardButton>
+                          <GiftIcon />
+                          <p className="bold_reward_text">
+                            {activeLanguage === languageEnum.english ? (
+                              "Reward"
+                            ) : (
+                              <Translate> Reward</Translate>
+                            )}
+                          </p>
+                          <p className="amount_text">$ {mission?.cashReward}</p>
+                        </RewardButton>
+                      </Card>
+                    );
+                  } else {
+                    return (
+                      <Card key={indexNumber + "nonLastFeedItems"}>
+                        <RelativeContainer>
+                          <CashTypeContainer>
+                            <p className="cash_text">
+                              {activeLanguage === languageEnum.english ? (
+                                "Cash"
                               ) : (
-                                <>
-                                  <VideoContainer>
-                                    <source
-                                      src={mission?.video?.src}
-                                      type="video/mp4"
-                                    />
-                                  </VideoContainer>
-                                  <PlayButton />
-                                </>
+                                <Translate> Cash</Translate>
                               )}
-                            </RelativeContainer>
-                            <p className="card_title">{mission?.title}</p>
-                            <RewardButton>
-                              <GiftIcon />
-                              <p className="bold_reward_text">Reward</p>
-                              <p className="amount_text">
-                                $ {mission?.cashReward}
-                              </p>
-                            </RewardButton>
-                          </Card>
-                        );
-                      }
-                  })  
-                }
+                            </p>
+                            <Dot />
+                            {mission.__typename === missionType.facebook ? (
+                              <Facebook />
+                            ) : (
+                              <Instagram />
+                            )}
+                          </CashTypeContainer>
+                          {mission?.image ? (
+                            <ImageContainer
+                              src={mission?.image?.src}
+                              alt={mission?.image?.alt}
+                            />
+                          ) : (
+                            <>
+                              <VideoContainer>
+                                <source
+                                  src={mission?.video?.src}
+                                  type="video/mp4"
+                                />
+                              </VideoContainer>
+                              <PlayButton />
+                            </>
+                          )}
+                        </RelativeContainer>
+                        <p className="card_title">{mission?.title}</p>
+                        <RewardButton>
+                          <GiftIcon />
+                          <p className="bold_reward_text">
+                            {activeLanguage === languageEnum.english ? (
+                              "Reward"
+                            ) : (
+                              <Translate> Reward</Translate>
+                            )}
+                          </p>
+                          <p className="amount_text">$ {mission?.cashReward}</p>
+                        </RewardButton>
+                      </Card>
+                    );
+                  }
+                })}
               </Fragment>
             );
           })}
 
           {loading && <p className="loader">Loading....</p>}
         </FullWidthContainer>
+      </Translator>
     );
 }
 
 export default PageContent;
+// 760159128187-3ik48u7qobmuovvk6ps8kqhpjn5n5g3s
